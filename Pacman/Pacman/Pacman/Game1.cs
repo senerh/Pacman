@@ -90,8 +90,8 @@ namespace Pacman
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //  changing the back buffer size changes the window size (when in windowed mode)
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 660;
+            graphics.PreferredBackBufferWidth = 20 * VY;
+            graphics.PreferredBackBufferHeight = 20 * VX;
             graphics.ApplyChanges();
             // on charge un objet mur 
             mur = new ObjetAnime(Content.Load<Texture2D>("images/mur"), new Vector2(0f, 0f), new Vector2(20f, 20f));
