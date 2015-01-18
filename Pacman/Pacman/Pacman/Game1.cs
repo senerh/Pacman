@@ -11,14 +11,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Pacman
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        private const int HEIGHT = 31;
-        private const int WIDTH = 28;
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         GameMain main;
@@ -38,11 +32,12 @@ namespace Pacman
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            main = new GameMain();
             Resources.LoadContent(Content);
 
-            graphics.PreferredBackBufferWidth = 20 * WIDTH;
-            graphics.PreferredBackBufferHeight = 20 * HEIGHT;
+            main = new GameMain();
+
+            graphics.PreferredBackBufferWidth = Grid.GRID_WIDTH * Tile.TILE_WITDH;
+            graphics.PreferredBackBufferHeight = Grid.GRID_HEIGHT * Tile.TILE_HEIGHT;
             graphics.ApplyChanges();
         }
 
