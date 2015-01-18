@@ -73,6 +73,10 @@ namespace Pacman
             return null;
         }
 
+        public bool isFinished()
+        {
+            return (listBean.Count == 0);
+        }
         //UPDATE & DRAW
         public void Update(MouseState mouse, KeyboardState keyboard)
         {

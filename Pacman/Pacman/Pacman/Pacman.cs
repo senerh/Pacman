@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Pacman
 {
@@ -17,6 +18,8 @@ namespace Pacman
         //FIELDS
         Rectangle hitbox;
 
+        Grid grid;
+
         Direction direction;
         int frameLine;
         int frameColumn;
@@ -25,11 +28,12 @@ namespace Pacman
         const int SPEED = 2;
         const int ANIMATION_SPEED = 5;
         //CONSTRUCTOR
-        public Pacman(int x, int y)
+        public Pacman(int x, int y, Grid grid)
         {
             hitbox = new Rectangle(x, y, Tile.TILE_WITDH, Tile.TILE_HEIGHT);
             direction = Direction.Right;
             timer = 0;
+            this.grid = grid;
         }
 
         //METHODS
@@ -47,7 +51,18 @@ namespace Pacman
                 timer++;
             }
         }
-        private void moveOnUp(Grid grid)
+
+        private void collisionBean()
+        {
+            Bean b = grid.isCollisionBean(hitbox);
+            if (b != null)
+            {
+                grid.removeBean(b);
+                if (Resources.eatBean.State == SoundState.Stopped)
+                    Resources.eatBean.Play();
+            }
+        }
+        private void moveOnUp()
         {
             hitbox.Y = hitbox.Y - SPEED;
             direction = Direction.Up;
@@ -56,13 +71,10 @@ namespace Pacman
             {
                 hitbox.Y++;
             }
-            Bean b = grid.isCollisionBean(hitbox);
-            if (b != null)
-            {
-                grid.removeBean(b);
-            }
+            collisionBean();
+            
         }
-        private void moveOnDown(Grid grid)
+        private void moveOnDown()
         {
             hitbox.Y = hitbox.Y + SPEED;
             direction = Direction.Down;
@@ -71,13 +83,9 @@ namespace Pacman
             {
                 hitbox.Y--;
             }
-            Bean b = grid.isCollisionBean(hitbox);
-            if (b != null)
-            {
-                grid.removeBean(b);
-            }
+            collisionBean();
         }
-        private void moveOnRight(Grid grid)
+        private void moveOnRight()
         {
             hitbox.X = hitbox.X + SPEED;
             direction = Direction.Right;
@@ -86,13 +94,9 @@ namespace Pacman
             {
                 hitbox.X--;
             }
-            Bean b = grid.isCollisionBean(hitbox);
-            if (b != null)
-            {
-                grid.removeBean(b);
-            }
+            collisionBean();
         }
-        private void moveOnLeft(Grid grid)
+        private void moveOnLeft()
         {
             hitbox.X = hitbox.X - SPEED;
             direction = Direction.Left;
@@ -101,45 +105,41 @@ namespace Pacman
             {
                 hitbox.X++;
             }
-            Bean b = grid.isCollisionBean(hitbox);
-            if (b != null)
-            {
-                grid.removeBean(b);
-            }
+            collisionBean();
         }
 
         //UPDATE & DRAW
-        public void Update(MouseState mouse, KeyboardState keyboard, Grid grid)
+        public void Update(MouseState mouse, KeyboardState keyboard)
         {
             if (hitbox.X % Tile.TILE_WITDH != 0)
             {
                 if (direction == Direction.Left)
-                    moveOnLeft(grid);
+                    moveOnLeft();
                 else
-                    moveOnRight(grid);
+                    moveOnRight();
             }
             else if (hitbox.Y % Tile.TILE_HEIGHT != 0)
             {
                 if (direction == Direction.Up)
-                    moveOnUp(grid);
+                    moveOnUp();
                 else
-                    moveOnDown(grid);
+                    moveOnDown();
             }
             else if (keyboard.IsKeyDown(Keys.Up))
             {
-                moveOnUp(grid);
+                moveOnUp();
             }
             else if (keyboard.IsKeyDown(Keys.Down))
             {
-                moveOnDown(grid);
+                moveOnDown();
             }
             else if (keyboard.IsKeyDown(Keys.Right))
             {
-                moveOnRight(grid);
+                moveOnRight();
             }
             else if (keyboard.IsKeyDown(Keys.Left))
             {
-                moveOnLeft(grid);
+                moveOnLeft();
             }
             else
             {
