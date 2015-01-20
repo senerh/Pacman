@@ -13,7 +13,7 @@ namespace Pacman
         //FIELDS
 
         //CONSTRUCTOR
-        public Wall(int x, int y) : base(x, y, Resources.wall)
+        public Wall(int x, int y, Texture2D wall) : base(x, y, wall)
         {
 
         }
