@@ -102,13 +102,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="images\ghostRed.png">
-      <Name>ghostRed</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="images\wallBot.png">
       <Name>wallBot</Name>
       <Importer>TextureImporter</Importer>
@@ -188,6 +181,13 @@
     </Compile>
     <Compile Include="images\wallMidXV.png">
       <Name>wallMidXV</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\ghostRed.png">
+      <Name>ghostRed</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

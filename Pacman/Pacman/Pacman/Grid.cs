@@ -15,6 +15,7 @@ namespace Pacman
         public const byte BEAN = 1;
         public const byte EMPTY = 2;
         public const byte PACMAN = 3;
+        public const byte GHOST_RED = 4;
 
 
         public const int GRID_WIDTH = 28;

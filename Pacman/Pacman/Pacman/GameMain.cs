@@ -14,7 +14,9 @@ namespace Pacman
     {
         //FIELDS
         Pacman pacman;
+        GhostRed ghostRed;
         Grid grid;
+        Summit[,] summits;
         private bool startNewLevel;
 
         //CONSTRUCTOR
@@ -24,13 +26,13 @@ namespace Pacman
         }
 
         //METHODS
-        private Vector2 PacmanPosition(byte[,] map)
+        private Vector2 getPosition(byte[,] map, byte element)
         {
             for (int y = 0; y < Grid.GRID_HEIGHT; y++)
             {
                 for (int x = 0; x < Grid.GRID_WIDTH; x++)
                 {
-                    if (map[y, x] == Grid.PACMAN)
+                    if (map[y, x] == element)
                         return new Vector2(x, y);
                 }
             }
@@ -55,7 +57,7 @@ namespace Pacman
             {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 2, 2, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 2, 2, 2, 2, 2, 2, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 4, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
             {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 2, 2, 2, 2, 2, 2, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0},
@@ -74,11 +76,26 @@ namespace Pacman
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             };
 
-            grid = new Grid(map);
+            summits = new Summit[Grid.GRID_HEIGHT, Grid.GRID_WIDTH];
 
-            Vector2 p = PacmanPosition(map);
+            for (int j = 0; j < Grid.GRID_HEIGHT; j++)
+            {
+                for (int i = 0; i< Grid.GRID_WIDTH; i++)
+                {
+                    if (map[j, i] != Grid.WALL)
+                    {
+                        summits[j, i] = new Summit(new Coordinate(i, j));
+                    }
+                }
+            }
 
+                grid = new Grid(map);
+
+            Vector2 p = getPosition(map, Grid.PACMAN);
             pacman = new Pacman((int)p.X * Tile.TILE_WITDH, (int)p.Y * Tile.TILE_HEIGHT, grid);
+
+            p = getPosition(map, Grid.GHOST_RED);
+            ghostRed = new GhostRed((int)p.X * Tile.TILE_WITDH, (int)p.Y * Tile.TILE_HEIGHT, grid, summits);
 
             startNewLevel = true;
         }
@@ -87,7 +104,10 @@ namespace Pacman
         public void Update(MouseState mouse, KeyboardState keyboard)
         {
             if (Resources.beginningSound.State == SoundState.Stopped)
+            {
                 pacman.Update(mouse, keyboard);
+                ghostRed.Update(pacman.getGridPosition());
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -97,6 +117,7 @@ namespace Pacman
                 startNewLevel = false;
                 grid.Draw(spriteBatch);
                 pacman.Draw(spriteBatch);
+                ghostRed.Draw(spriteBatch);
                 Resources.beginningSound.Play();
             }
             else if (grid.isFinished())
@@ -107,6 +128,7 @@ namespace Pacman
             {
                 grid.Draw(spriteBatch);
                 pacman.Draw(spriteBatch);
+                ghostRed.Draw(spriteBatch);
             }
         }
     }

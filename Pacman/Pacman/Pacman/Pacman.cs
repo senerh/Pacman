@@ -11,7 +11,7 @@ namespace Pacman
 {
     public enum Direction
     {
-        Up, Down, Left, Right
+        Up, Down, Left, Right, None
     };
     class Pacman
     {
@@ -26,7 +26,7 @@ namespace Pacman
         int timer;
 
         const int SPEED = 2;
-        const int ANIMATION_SPEED = 5;
+        const int ANIMATION_SPEED = 3;
         //CONSTRUCTOR
         public Pacman(int x, int y, Grid grid)
         {
@@ -51,7 +51,10 @@ namespace Pacman
                 timer++;
             }
         }
-
+        public Coordinate getGridPosition()
+        {
+            return new Coordinate(hitbox.X / Tile.TILE_WITDH, hitbox.Y / Tile.TILE_HEIGHT);
+        }
         private void collisionBean()
         {
             Bean b = grid.isCollisionBean(hitbox);
@@ -159,6 +162,8 @@ namespace Pacman
                     break;
                 case Direction.Right:
                     frameLine = 4;
+                    break;
+                case Direction.None:
                     break;
             }
 
