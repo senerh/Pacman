@@ -16,7 +16,8 @@ namespace Pacman
         Pacman pacman;
         GhostRed ghostRed;
         Grid grid;
-        Summit[,] summits;
+        Engine engine;
+        byte[,] map;
         private bool startNewLevel;
 
         //CONSTRUCTOR
@@ -26,22 +27,22 @@ namespace Pacman
         }
 
         //METHODS
-        private Vector2 getPosition(byte[,] map, byte element)
+        private Coordinate getPositionOnGrid(byte element)
         {
-            for (int y = 0; y < Grid.GRID_HEIGHT; y++)
+            for (int x = 0; x < Grid.GRID_WIDTH; x++)
             {
-                for (int x = 0; x < Grid.GRID_WIDTH; x++)
+                for (int y = 0; y < Grid.GRID_HEIGHT; y++)
                 {
-                    if (map[y, x] == element)
-                        return new Vector2(x, y);
+                    if (map[x, y] == element)
+                        return new Coordinate(x, y);
                 }
             }
-            return new Vector2(0, 0);
+            return null;
         }
 
         private void loadNextLevel()
         {
-            byte[,] map = new byte[Grid.GRID_HEIGHT, Grid.GRID_WIDTH]
+            byte[,] m = new byte[Grid.GRID_HEIGHT, Grid.GRID_WIDTH]
             {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
@@ -76,26 +77,31 @@ namespace Pacman
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             };
 
-            summits = new Summit[Grid.GRID_HEIGHT, Grid.GRID_WIDTH];
+            map = new byte[Grid.GRID_WIDTH, Grid.GRID_HEIGHT];
+
+            Summit[,] summits = new Summit[Grid.GRID_WIDTH, Grid.GRID_HEIGHT];
 
             for (int j = 0; j < Grid.GRID_HEIGHT; j++)
             {
                 for (int i = 0; i< Grid.GRID_WIDTH; i++)
                 {
-                    if (map[j, i] != Grid.WALL)
+                    map[i, j] = m[j, i];
+                    if (map[i, j] != Grid.WALL)
                     {
-                        summits[j, i] = new Summit(new Coordinate(i, j));
+                        summits[i, j] = new Summit(new Coordinate(i, j));
                     }
                 }
             }
+            
+            grid = new Grid(map);
 
-                grid = new Grid(map);
+            engine = new Engine(grid);
 
-            Vector2 p = getPosition(map, Grid.PACMAN);
-            pacman = new Pacman((int)p.X * Tile.TILE_WITDH, (int)p.Y * Tile.TILE_HEIGHT, grid);
+            Coordinate p = getPositionOnGrid(Grid.PACMAN);
+            pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
-            p = getPosition(map, Grid.GHOST_RED);
-            ghostRed = new GhostRed((int)p.X * Tile.TILE_WITDH, (int)p.Y * Tile.TILE_HEIGHT, grid, summits);
+            p = getPositionOnGrid(Grid.GHOST_RED);
+            ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine, summits);
 
             startNewLevel = true;
         }

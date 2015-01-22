@@ -13,6 +13,7 @@ namespace Pacman
     {
         //FIELDS
         Summit[,] summits;
+        Engine engine;
 
         Rectangle hitbox;
 
@@ -26,12 +27,12 @@ namespace Pacman
         const int SPEED = 2;
         const int ANIMATION_SPEED = 5;
         //CONSTRUCTOR
-        public GhostRed(int x, int y, Grid grid, Summit[,] s)
+        public GhostRed(int x, int y, Engine engine, Summit[,] s)
         {
             hitbox = new Rectangle(x, y, Tile.TILE_WITDH, Tile.TILE_HEIGHT);
             direction = Direction.Right;
             timer = 0;
-            this.grid = grid;
+            this.engine = engine;
             this.summits = new Summit[Grid.GRID_HEIGHT, Grid.GRID_WIDTH];
             summits = s;
         }
@@ -59,16 +60,13 @@ namespace Pacman
 
         public virtual void changerDirection(Coordinate pacmanCoordinate)
         {
-            int y = getGridPosition().Y;
-            int x = getGridPosition().X;
-            Summit sommetCourant = summits[getGridPosition().Y, getGridPosition().X];
+            Summit sommetCourant = summits[getGridPosition().X, getGridPosition().Y];
             sommetCourant.Potential = 0;
             sommetCourant.Mark = true;
             Summit sommetSuivant = sommetCourant;
-            Summit sommetPacman = summits[pacmanCoordinate.Y, pacmanCoordinate.X];
+            Summit sommetPacman = summits[pacmanCoordinate.X, pacmanCoordinate.Y];
 
-            //Moi j'utilise l'algo pour plusieurs trucs, toi le sommetViser c'est PacMan
-            Summit sommetVise = summits[pacmanCoordinate.Y, pacmanCoordinate.X];
+            Summit sommetVise = summits[pacmanCoordinate.X, pacmanCoordinate.Y];
 
             while (sommetSuivant.Coordinate != sommetVise.Coordinate)
             {
@@ -78,63 +76,63 @@ namespace Pacman
                     && sommetSuivant.Coordinate.X != Grid.GRID_WIDTH - 1 && sommetSuivant.Coordinate.Y != Grid.GRID_HEIGHT - 1)
                 {
                     //Case du haut
-                    if (grid.isCollisionWall(new Rectangle(sommetSuivant.Coordinate.X * Tile.TILE_WITDH, (sommetSuivant.Coordinate.Y - 1) * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)) == null)
+                    if (!engine.isCollisionWall(new Rectangle(sommetSuivant.Coordinate.X * Tile.TILE_WITDH, (sommetSuivant.Coordinate.Y - 1) * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)))
                     {
-                        Summit s = summits[(int)sommetSuivant.Coordinate.Y - 1, (int)sommetSuivant.Coordinate.X];
+                        Summit s = summits[(int)sommetSuivant.Coordinate.X, (int)sommetSuivant.Coordinate.Y - 1];
                         if (s.Potential > sommetSuivant.Potential + 1)
                         {
-                            summits[(int)sommetSuivant.Coordinate.Y - 1, (int)sommetSuivant.Coordinate.X].Previous = sommetSuivant;
-                            summits[(int)sommetSuivant.Coordinate.Y - 1, (int)sommetSuivant.Coordinate.X].Potential = sommetSuivant.Potential + 1;
+                            summits[(int)sommetSuivant.Coordinate.X, (int)sommetSuivant.Coordinate.Y - 1].Previous = sommetSuivant;
+                            summits[(int)sommetSuivant.Coordinate.X, (int)sommetSuivant.Coordinate.Y - 1].Potential = sommetSuivant.Potential + 1;
                         }
                     }
                     //Case du bas
-                    if (grid.isCollisionWall(new Rectangle(sommetSuivant.Coordinate.X * Tile.TILE_WITDH, (sommetSuivant.Coordinate.Y + 1) * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)) == null)
+                    if (!engine.isCollisionWall(new Rectangle(sommetSuivant.Coordinate.X * Tile.TILE_WITDH, (sommetSuivant.Coordinate.Y + 1) * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)))
                     {
-                        Summit s = summits[(int)sommetSuivant.Coordinate.Y + 1, (int)sommetSuivant.Coordinate.X];
+                        Summit s = summits[(int)sommetSuivant.Coordinate.X, (int)sommetSuivant.Coordinate.Y + 1];
                         if (s.Potential > sommetSuivant.Potential + 1)
                         {
-                            summits[(int)sommetSuivant.Coordinate.Y + 1, (int)sommetSuivant.Coordinate.X].Previous = sommetSuivant;
-                            summits[(int)sommetSuivant.Coordinate.Y + 1, (int)sommetSuivant.Coordinate.X].Potential = sommetSuivant.Potential + 1;
+                            summits[(int)sommetSuivant.Coordinate.X, (int)sommetSuivant.Coordinate.Y + 1].Previous = sommetSuivant;
+                            summits[(int)sommetSuivant.Coordinate.X, (int)sommetSuivant.Coordinate.Y + 1].Potential = sommetSuivant.Potential + 1;
                         }
                     }
                     //Case de gauche
-                    if (grid.isCollisionWall(new Rectangle((sommetSuivant.Coordinate.X - 1) * Tile.TILE_WITDH, sommetSuivant.Coordinate.Y * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)) == null)
+                    if (!engine.isCollisionWall(new Rectangle((sommetSuivant.Coordinate.X - 1) * Tile.TILE_WITDH, sommetSuivant.Coordinate.Y * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)))
                     {
-                        Summit s = summits[(int)sommetSuivant.Coordinate.Y, (int)sommetSuivant.Coordinate.X - 1];
+                        Summit s = summits[(int)sommetSuivant.Coordinate.X - 1, (int)sommetSuivant.Coordinate.Y];
                         if (s.Potential > sommetSuivant.Potential + 1)
                         {
-                            summits[(int)sommetSuivant.Coordinate.Y, (int)sommetSuivant.Coordinate.X - 1].Previous = sommetSuivant;
-                            summits[(int)sommetSuivant.Coordinate.Y, (int)sommetSuivant.Coordinate.X - 1].Potential = sommetSuivant.Potential + 1;
+                            summits[(int)sommetSuivant.Coordinate.X - 1, (int)sommetSuivant.Coordinate.Y].Previous = sommetSuivant;
+                            summits[(int)sommetSuivant.Coordinate.X - 1, (int)sommetSuivant.Coordinate.Y].Potential = sommetSuivant.Potential + 1;
                         }
                     }
                     //Case de droite
-                    if (grid.isCollisionWall(new Rectangle((sommetSuivant.Coordinate.X + 1) * Tile.TILE_WITDH, sommetSuivant.Coordinate.Y * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)) == null)
+                    if (!engine.isCollisionWall(new Rectangle((sommetSuivant.Coordinate.X + 1) * Tile.TILE_WITDH, sommetSuivant.Coordinate.Y * Tile.TILE_HEIGHT, hitbox.Width, hitbox.Height)))
                     {
-                        Summit s = summits[(int)sommetSuivant.Coordinate.Y, (int)sommetSuivant.Coordinate.X + 1];
+                        Summit s = summits[(int)sommetSuivant.Coordinate.X + 1, (int)sommetSuivant.Coordinate.Y];
                         if (s.Potential > sommetSuivant.Potential + 1)
                         {
-                            summits[(int)sommetSuivant.Coordinate.Y, (int)sommetSuivant.Coordinate.X + 1].Previous = sommetSuivant;
-                            summits[(int)sommetSuivant.Coordinate.Y, (int)sommetSuivant.Coordinate.X + 1].Potential = sommetSuivant.Potential + 1;
+                            summits[(int)sommetSuivant.Coordinate.X + 1, (int)sommetSuivant.Coordinate.Y].Previous = sommetSuivant;
+                            summits[(int)sommetSuivant.Coordinate.X + 1, (int)sommetSuivant.Coordinate.Y].Potential = sommetSuivant.Potential + 1;
                         }
                     }
                 }
 
                 int minimum = Summit.INFINITE;
 
-                for (int j = 0; j < Grid.GRID_HEIGHT; j++)
+                for (int x = 0; x < Grid.GRID_WIDTH; x++)
                 {
-                    for (int i = 0; i < Grid.GRID_WIDTH; i++)
+                    for (int y = 0; y < Grid.GRID_HEIGHT; y++)
                     {
-                        if (summits[j, i] != null && !summits[j, i].Mark && summits[j, i].Potential < minimum)
+                        if (summits[x, y] != null && !summits[x, y].Mark && summits[x, y].Potential < minimum)
                         {
-                            minimum = summits[j, i].Potential;
-                            sommetSuivant = summits[j, i];
+                            minimum = summits[x, y].Potential;
+                            sommetSuivant = summits[x, y];
                         }
                     }
                 }
             }
 
-            Summit caseSuivante = summits[(int)sommetSuivant.Coordinate.Y, (int)sommetSuivant.Coordinate.X];
+            Summit caseSuivante = summits[(int)sommetSuivant.Coordinate.X, (int)sommetSuivant.Coordinate.Y];
 
             while (caseSuivante.Previous != null && caseSuivante.Previous.Coordinate != sommetCourant.Coordinate)
             {
@@ -152,15 +150,15 @@ namespace Pacman
             else
                 direction = Direction.None;
 
-            for (int i = 0; i < Grid.GRID_HEIGHT; i++)
+            for (int x = 0; x < Grid.GRID_WIDTH; x++)
             {
-                for (int j = 0; j < Grid.GRID_WIDTH; j++)
+                for (int y = 0; y < Grid.GRID_HEIGHT; y++)
                 {
-                    if (summits[i, j] != null)
+                    if (summits[x, y] != null)
                     {
-                        summits[i, j].Mark = false;
-                        summits[i, j].Potential = Summit.INFINITE;
-                        summits[i, j].Previous = null;
+                        summits[x, y].Mark = false;
+                        summits[x, y].Potential = Summit.INFINITE;
+                        summits[x, y].Previous = null;
                     }
                 }
             }
@@ -168,43 +166,27 @@ namespace Pacman
 
         private void moveOnUp()
         {
-            hitbox.Y = hitbox.Y - SPEED;
+            hitbox = engine.translateY(hitbox, -SPEED);
             direction = Direction.Up;
             Animate();
-            while (grid.isCollisionWall(hitbox) != null)
-            {
-                hitbox.Y++;
-            }
         }
         private void moveOnDown()
         {
-            hitbox.Y = hitbox.Y + SPEED;
+            hitbox = engine.translateY(hitbox, SPEED);
             direction = Direction.Down;
             Animate();
-            while (grid.isCollisionWall(hitbox) != null)
-            {
-                hitbox.Y--;
-            }
         }
         private void moveOnRight()
         {
-            hitbox.X = hitbox.X + SPEED;
+            hitbox = engine.translateX(hitbox, SPEED);
             direction = Direction.Right;
             Animate();
-            while (grid.isCollisionWall(hitbox) != null)
-            {
-                hitbox.X--;
-            }
         }
         private void moveOnLeft()
         {
-            hitbox.X = hitbox.X - SPEED;
+            hitbox = engine.translateX(hitbox, -SPEED);
             direction = Direction.Left;
             Animate();
-            while (grid.isCollisionWall(hitbox) != null)
-            {
-                hitbox.X++;
-            }
         }
 
         //UPDATE & DRAW

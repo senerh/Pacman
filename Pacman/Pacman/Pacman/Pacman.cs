@@ -18,7 +18,7 @@ namespace Pacman
         //FIELDS
         Rectangle hitbox;
 
-        Grid grid;
+        Engine engine;
 
         Direction direction;
         int frameLine;
@@ -28,12 +28,12 @@ namespace Pacman
         const int SPEED = 2;
         const int ANIMATION_SPEED = 3;
         //CONSTRUCTOR
-        public Pacman(int x, int y, Grid grid)
+        public Pacman(int x, int y, Engine engine)
         {
             hitbox = new Rectangle(x, y, Tile.TILE_WITDH, Tile.TILE_HEIGHT);
             direction = Direction.Right;
             timer = 0;
-            this.grid = grid;
+            this.engine = engine;
         }
 
         //METHODS
@@ -55,60 +55,49 @@ namespace Pacman
         {
             return new Coordinate(hitbox.X / Tile.TILE_WITDH, hitbox.Y / Tile.TILE_HEIGHT);
         }
-        private void collisionBean()
+        private void moveOnUp()
         {
-            Bean b = grid.isCollisionBean(hitbox);
-            if (b != null)
+            hitbox = engine.translateY(hitbox, -SPEED);
+            direction = Direction.Up;
+            Animate();
+            if (engine.isCollisionBean(hitbox))
             {
-                grid.removeBean(b);
                 if (Resources.eatBean.State == SoundState.Stopped)
                     Resources.eatBean.Play();
             }
         }
-        private void moveOnUp()
-        {
-            hitbox.Y = hitbox.Y - SPEED;
-            direction = Direction.Up;
-            Animate();
-            while (grid.isCollisionWall(hitbox) != null)
-            {
-                hitbox.Y++;
-            }
-            collisionBean();
-            
-        }
         private void moveOnDown()
         {
-            hitbox.Y = hitbox.Y + SPEED;
+            hitbox = engine.translateY(hitbox, SPEED);
             direction = Direction.Down;
             Animate();
-            while (grid.isCollisionWall(hitbox) != null)
+            if (engine.isCollisionBean(hitbox))
             {
-                hitbox.Y--;
+                if (Resources.eatBean.State == SoundState.Stopped)
+                    Resources.eatBean.Play();
             }
-            collisionBean();
         }
         private void moveOnRight()
         {
-            hitbox.X = hitbox.X + SPEED;
+            hitbox = engine.translateX(hitbox, SPEED);
             direction = Direction.Right;
             Animate();
-            while (grid.isCollisionWall(hitbox) != null)
+            if (engine.isCollisionBean(hitbox))
             {
-                hitbox.X--;
+                if (Resources.eatBean.State == SoundState.Stopped)
+                    Resources.eatBean.Play();
             }
-            collisionBean();
         }
         private void moveOnLeft()
         {
-            hitbox.X = hitbox.X - SPEED;
+            hitbox = engine.translateX(hitbox, -SPEED);
             direction = Direction.Left;
             Animate();
-            while (grid.isCollisionWall(hitbox) != null)
+            if (engine.isCollisionBean(hitbox))
             {
-                hitbox.X++;
+                if (Resources.eatBean.State == SoundState.Stopped)
+                    Resources.eatBean.Play();
             }
-            collisionBean();
         }
 
         //UPDATE & DRAW

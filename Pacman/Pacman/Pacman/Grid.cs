@@ -31,20 +31,20 @@ namespace Pacman
             listBean = new List<Bean>();
             listWall = new List<Wall>();
 
-            for (int y = 0; y < GRID_HEIGHT; y++)
+            for (int x = 0; x < GRID_WIDTH; x++)
             {
-                for (int x = 0; x < GRID_WIDTH; x++)
+                for (int y = 0; y < GRID_HEIGHT; y++)
                 {
-                    switch(map[y, x])
+                    switch(map[x, y])
                     {
                         case WALL:
-                            if (y>0 && map[y-1, x] == WALL)//mur en haut
+                            if (y > 0 && map[x, y - 1] == WALL)//mur en haut
                             {
-                                if (y+1<GRID_HEIGHT && map[y+1, x] == WALL)//mur en bas
+                                if (y < GRID_HEIGHT-1 && map[x, y + 1] == WALL)//mur en bas
                                 {
-                                    if (x>0 && map[y, x-1] == WALL)//mur a gauche
+                                    if (x > 0 && map[x-1, y] == WALL)//mur a gauche
                                     {
-                                        if (x+1<GRID_WIDTH && map[y, x+1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallMid));
                                         }
@@ -55,7 +55,7 @@ namespace Pacman
                                     }
                                     else
                                     {
-                                        if (x+1 < GRID_WIDTH && map[y, x + 1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallLeft));
                                         }
@@ -67,9 +67,9 @@ namespace Pacman
                                 }
                                 else
                                 {
-                                    if (x > 0 && map[y, x - 1] == WALL)//mur a gauche
+                                    if (x > 0 && map[x - 1, y] == WALL)//mur a gauche
                                     {
-                                        if (x+1 < GRID_WIDTH && map[y, x + 1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallBot));
                                         }
@@ -80,7 +80,7 @@ namespace Pacman
                                     }
                                     else
                                     {
-                                        if (x+1 < GRID_WIDTH && map[y, x + 1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallBotLeft));
                                         }
@@ -93,11 +93,11 @@ namespace Pacman
                             }
                             else
                             {
-                                if (y+1 < GRID_HEIGHT && map[y + 1, x] == WALL)//mur en bas
+                                if (y + 1 < GRID_HEIGHT && map[x, y + 1] == WALL)//mur en bas
                                 {
-                                    if (x > 0 && map[y, x - 1] == WALL)//mur a gauche
+                                    if (x > 0 && map[x - 1, y] == WALL)//mur a gauche
                                     {
-                                        if (x+1 < GRID_WIDTH && map[y, x + 1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallTop));
                                         }
@@ -108,7 +108,7 @@ namespace Pacman
                                     }
                                     else
                                     {
-                                        if (x+1 < GRID_WIDTH && map[y, x + 1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallTopLeft));
                                         }
@@ -120,9 +120,9 @@ namespace Pacman
                                 }
                                 else
                                 {
-                                    if (x > 0 && map[y, x - 1] == WALL)//mur a gauche
+                                    if (x > 0 && map[x - 1, y] == WALL)//mur a gauche
                                     {
-                                        if (x+1 < GRID_WIDTH && map[y, x + 1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallMidXH));
                                         }
@@ -133,7 +133,7 @@ namespace Pacman
                                     }
                                     else
                                     {
-                                        if (x+1 < GRID_WIDTH && map[y, x + 1] == WALL)//mur a droite
+                                        if (x + 1 < GRID_WIDTH && map[x + 1, y] == WALL)//mur a droite
                                         {
                                             listWall.Add(new Wall(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT, Resources.wallLeftX));
                                         }
@@ -161,24 +161,13 @@ namespace Pacman
             listBean.Remove(b);
         }
 
-        public Wall isCollisionWall(Rectangle hitbox)
+        public List<Wall> getListWall()
         {
-            foreach (Wall w in listWall)
-            {
-                if (w.getHitbox().Intersects(hitbox))
-                    return w;
-            }
-            return null;
+            return listWall;
         }
-
-        public Bean isCollisionBean(Rectangle hitbox)
+        public List<Bean> getListBean()
         {
-            foreach (Bean b in listBean)
-            {
-                if (b.getHitbox().Intersects(hitbox))
-                    return b;
-            }
-            return null;
+            return listBean;
         }
 
         public bool isFinished()
