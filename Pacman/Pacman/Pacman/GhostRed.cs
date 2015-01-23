@@ -25,7 +25,7 @@ namespace Pacman
 
         const int SPEED = 2;
         const int ANIMATION_SPEED = 5;
-        const int TIME_TO_WAIT = 60;
+        const int TIME_TO_WAIT = 5*60;
 
         //CONSTRUCTOR
         public GhostRed(int x, int y, Engine engine)
@@ -62,6 +62,11 @@ namespace Pacman
             return new Coordinates(hitbox.X / Tile.TILE_WITDH, hitbox.Y / Tile.TILE_HEIGHT);
         }
 
+        public Rectangle getHitbox()
+        {
+            return hitbox;
+        }
+
         private void moveOnUp()
         {
             hitbox = engine.translateY(hitbox, -SPEED);
@@ -93,7 +98,6 @@ namespace Pacman
             if (t_wait < TIME_TO_WAIT)
             {
                 t_wait++;
-                Animate();
             }
             else
             {

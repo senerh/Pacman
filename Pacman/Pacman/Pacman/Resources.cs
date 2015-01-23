@@ -12,6 +12,7 @@ namespace Pacman
     {
         //STATIC FIELS
         public static Texture2D pacman;
+        public static Texture2D pacmanDeath;
         public static Texture2D ghostRed;
         public static Texture2D wallBot, wallBotLeft, wallBotRight, wallBotX;
         public static Texture2D wallLeft, wallLeftX;
@@ -21,11 +22,13 @@ namespace Pacman
         public static Texture2D bean;
         public static SoundEffectInstance beginningSound;
         public static SoundEffectInstance eatBean;
+        public static SoundEffectInstance pacmanDeathSound;
 
         //LOAD CONTENT
         public static void LoadContent(ContentManager content)
         {
             pacman = content.Load<Texture2D>("images/pacman");
+            pacmanDeath = content.Load<Texture2D>("images/pacman_death");
             ghostRed = content.Load<Texture2D>("images/ghostRed");
             wallBot = content.Load<Texture2D>("images/wallBot");
             wallBotLeft = content.Load<Texture2D>("images/wallBotLeft");
@@ -46,6 +49,7 @@ namespace Pacman
             bean = content.Load<Texture2D>("images/bean");
             beginningSound = content.Load<SoundEffect>("sons/pacman_beginning").CreateInstance();
             eatBean = content.Load<SoundEffect>("sons/eatBean").CreateInstance();
+            pacmanDeathSound = content.Load<SoundEffect>("sons/PacmanEaten").CreateInstance();
         }
     }
 }

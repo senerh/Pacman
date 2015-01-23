@@ -16,6 +16,9 @@ namespace Pacman
     class Pacman
     {
         //FIELDS
+        bool vulnerable;
+        bool dead;
+
         Rectangle hitbox;
 
         Engine engine;
@@ -24,16 +27,20 @@ namespace Pacman
         int frameLine;
         int frameColumn;
         int timer;
+        int t_invulnerable;
 
         const int SPEED = 2;
         const int ANIMATION_SPEED = 3;
+        const int T_INVULNERABLE = 10 * 60;
         //CONSTRUCTOR
         public Pacman(int x, int y, Engine engine)
         {
+            this.engine = engine;
             hitbox = new Rectangle(x, y, Tile.TILE_WITDH, Tile.TILE_HEIGHT);
             direction = Direction.Right;
             timer = 0;
-            this.engine = engine;
+            vulnerable = true;
+            dead = false;
         }
 
         //METHODS
@@ -51,9 +58,42 @@ namespace Pacman
                 timer++;
             }
         }
+
+        private void AnimateDeath()
+        {
+            if (timer >= ANIMATION_SPEED)
+            {
+                timer = 0;
+                if (frameColumn < 12)
+                    frameColumn++;
+            }
+            else
+            {
+                timer++;
+            }
+        }
         public Coordinates getGridPosition()
         {
             return new Coordinates(hitbox.X / Tile.TILE_WITDH, hitbox.Y / Tile.TILE_HEIGHT);
+        }
+        public Rectangle getHitbox()
+        {
+            return hitbox;
+        }
+        public bool isVulnerable()
+        {
+            return vulnerable;
+        }
+        public void setInvulnerable()
+        {
+            t_invulnerable = T_INVULNERABLE;
+            vulnerable = false;
+        }
+        public void die()
+        {
+            dead = true;
+            frameColumn = 1;
+            Resources.pacmanDeathSound.Play();
         }
         private void moveOnUp()
         {
@@ -156,13 +196,29 @@ namespace Pacman
                     break;
             }
 
+            if (!vulnerable)
+            {
+                t_invulnerable--;
+                if (t_invulnerable == 0)
+                    vulnerable = true;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Resources.pacman, hitbox,
-                new Rectangle((frameColumn-1)*hitbox.Width, (frameLine-1)*hitbox.Height, hitbox.Width, hitbox.Height),
+            if (dead)
+            {
+                spriteBatch.Draw(Resources.pacmanDeath, hitbox,
+                new Rectangle((frameColumn - 1) * hitbox.Width, 0, hitbox.Width, hitbox.Height),
                 Color.White);
+                AnimateDeath();
+            }
+            else
+            {
+                spriteBatch.Draw(Resources.pacman, hitbox,
+                new Rectangle((frameColumn - 1) * hitbox.Width, (frameLine - 1) * hitbox.Height, hitbox.Width, hitbox.Height),
+                Color.White);
+            }
         }
     }
 }

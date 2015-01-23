@@ -18,6 +18,7 @@ namespace Pacman
         Grid grid;
         Engine engine;
         private bool startNewLevel;
+        private bool isDying;
 
         //CONSTRUCTOR
         public GameMain()
@@ -97,6 +98,7 @@ namespace Pacman
             ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
             startNewLevel = true;
+            isDying = false;
         }
 
         //UPDATE & DRAW
@@ -104,8 +106,31 @@ namespace Pacman
         {
             if (Resources.beginningSound.State == SoundState.Stopped)
             {
-                pacman.Update(mouse, keyboard);
-                ghostRed.Update(pacman.getGridPosition());
+                if (grid.isFinished())
+                {
+                    loadNextLevel();
+                }
+                else if (engine.isCollision(pacman.getHitbox(), ghostRed.getHitbox()))
+                {
+                    if (pacman.isVulnerable())
+                    {
+                        if (isDying)
+                        {
+                            if (Resources.pacmanDeathSound.State == SoundState.Stopped)
+                                loadNextLevel();
+                        }
+                        else
+                        {
+                            isDying = true;
+                            pacman.die();
+                        }
+                    }
+                }
+                else
+                {
+                    pacman.Update(mouse, keyboard);
+                    ghostRed.Update(pacman.getGridPosition());
+                }
             }
         }
 
@@ -118,10 +143,6 @@ namespace Pacman
                 pacman.Draw(spriteBatch);
                 ghostRed.Draw(spriteBatch);
                 Resources.beginningSound.Play();
-            }
-            else if (grid.isFinished())
-            {
-                loadNextLevel();
             }
             else
             {
