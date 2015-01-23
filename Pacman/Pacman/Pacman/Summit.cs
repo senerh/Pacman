@@ -10,10 +10,10 @@ namespace Pacman
         public const int INFINITE = 1000000;
         public int Potential;
         public bool Mark;
-        public Coordinate Coordinate;
+        public Coordinates Coordinate;
         public Summit Previous;
 
-        public Summit(Coordinate coord)
+        public Summit(Coordinates coord)
         {
             Potential = INFINITE;
             Mark = false;

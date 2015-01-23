@@ -17,7 +17,6 @@ namespace Pacman
         GhostRed ghostRed;
         Grid grid;
         Engine engine;
-        byte[,] map;
         private bool startNewLevel;
 
         //CONSTRUCTOR
@@ -27,14 +26,14 @@ namespace Pacman
         }
 
         //METHODS
-        private Coordinate getPositionOnGrid(byte element)
+        private Coordinates getPositionOnMap(byte[,] map, byte element)
         {
             for (int x = 0; x < Grid.GRID_WIDTH; x++)
             {
                 for (int y = 0; y < Grid.GRID_HEIGHT; y++)
                 {
                     if (map[x, y] == element)
-                        return new Coordinate(x, y);
+                        return new Coordinates(x, y);
                 }
             }
             return null;
@@ -77,19 +76,13 @@ namespace Pacman
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             };
 
-            map = new byte[Grid.GRID_WIDTH, Grid.GRID_HEIGHT];
-
-            Summit[,] summits = new Summit[Grid.GRID_WIDTH, Grid.GRID_HEIGHT];
+            byte[,] map = new byte[Grid.GRID_WIDTH, Grid.GRID_HEIGHT];
 
             for (int j = 0; j < Grid.GRID_HEIGHT; j++)
             {
                 for (int i = 0; i< Grid.GRID_WIDTH; i++)
                 {
                     map[i, j] = m[j, i];
-                    if (map[i, j] != Grid.WALL)
-                    {
-                        summits[i, j] = new Summit(new Coordinate(i, j));
-                    }
                 }
             }
             
@@ -97,11 +90,11 @@ namespace Pacman
 
             engine = new Engine(grid);
 
-            Coordinate p = getPositionOnGrid(Grid.PACMAN);
+            Coordinates p = getPositionOnMap(map, Grid.PACMAN);
             pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
-            p = getPositionOnGrid(Grid.GHOST_RED);
-            ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine, summits);
+            p = getPositionOnMap(map, Grid.GHOST_RED);
+            ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
             startNewLevel = true;
         }

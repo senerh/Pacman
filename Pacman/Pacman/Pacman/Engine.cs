@@ -67,6 +67,12 @@ namespace Pacman
             return false;
         }
 
+        public bool isWallOnMap(int x, int y)
+        {
+            byte[,] map = grid.getMap();
+            return (map[x, y] == Grid.WALL);
+        }
+
         public bool isCollisionBean(Rectangle hitbox)
         {
             foreach(Bean b in listBean)

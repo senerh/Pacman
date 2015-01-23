@@ -51,9 +51,9 @@ namespace Pacman
                 timer++;
             }
         }
-        public Coordinate getGridPosition()
+        public Coordinates getGridPosition()
         {
-            return new Coordinate(hitbox.X / Tile.TILE_WITDH, hitbox.Y / Tile.TILE_HEIGHT);
+            return new Coordinates(hitbox.X / Tile.TILE_WITDH, hitbox.Y / Tile.TILE_HEIGHT);
         }
         private void moveOnUp()
         {

@@ -24,10 +24,12 @@ namespace Pacman
         //FIELDS
         List<Bean> listBean;
         List<Wall> listWall;
+        byte[,] map;
 
         //CONSTRUCTOR
         public Grid(byte[,] map)
         {
+            this.map = map;
             listBean = new List<Bean>();
             listWall = new List<Wall>();
 
@@ -168,6 +170,11 @@ namespace Pacman
         public List<Bean> getListBean()
         {
             return listBean;
+        }
+
+        public byte[,] getMap()
+        {
+            return map;
         }
 
         public bool isFinished()
