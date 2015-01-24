@@ -181,6 +181,19 @@ namespace Pacman
         {
             return (listBean.Count == 0);
         }
+
+        public Coordinates getPositionOnMap(byte element)
+        {
+            for (int x = 0; x < Grid.GRID_WIDTH; x++)
+            {
+                for (int y = 0; y < Grid.GRID_HEIGHT; y++)
+                {
+                    if (map[x, y] == element)
+                        return new Coordinates(x, y);
+                }
+            }
+            return null;
+        }
         //UPDATE & DRAW
         public void Update(MouseState mouse, KeyboardState keyboard)
         {

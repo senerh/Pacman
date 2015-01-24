@@ -20,9 +20,13 @@ namespace Pacman
         public static Texture2D wallRight, wallRightX;
         public static Texture2D wallTop, wallTopLeft, wallTopRight, wallTopX;
         public static Texture2D bean;
+        public static Texture2D life;
+        public static Texture2D start;
+        public static Texture2D gameOver;
         public static SoundEffectInstance beginningSound;
         public static SoundEffectInstance eatBean;
         public static SoundEffectInstance pacmanDeathSound;
+        public static SpriteFont font;
 
         //LOAD CONTENT
         public static void LoadContent(ContentManager content)
@@ -47,9 +51,13 @@ namespace Pacman
             wallTopRight = content.Load<Texture2D>("images/wallTopRight");
             wallTopX = content.Load<Texture2D>("images/wallTopX");
             bean = content.Load<Texture2D>("images/bean");
+            life = content.Load<Texture2D>("images/life");
+            start = content.Load<Texture2D>("images/start");
+            gameOver = content.Load<Texture2D>("images/gameOver");
             beginningSound = content.Load<SoundEffect>("sons/pacman_beginning").CreateInstance();
             eatBean = content.Load<SoundEffect>("sons/eatBean").CreateInstance();
             pacmanDeathSound = content.Load<SoundEffect>("sons/PacmanEaten").CreateInstance();
+            font = content.Load<SpriteFont>("polices/font");
         }
     }
 }

@@ -17,29 +17,23 @@ namespace Pacman
         GhostRed ghostRed;
         Grid grid;
         Engine engine;
-        private bool startNewLevel;
-        private bool isDying;
+        Life lives;
+        Score score;
+        GameOver gameOver;
+        bool startNewLevel;
+        bool finished;
 
         //CONSTRUCTOR
         public GameMain()
         {
+            lives = new Life();
+            score = new Score();
+            gameOver = null;
+            finished = false;
             loadNextLevel();
         }
 
         //METHODS
-        private Coordinates getPositionOnMap(byte[,] map, byte element)
-        {
-            for (int x = 0; x < Grid.GRID_WIDTH; x++)
-            {
-                for (int y = 0; y < Grid.GRID_HEIGHT; y++)
-                {
-                    if (map[x, y] == element)
-                        return new Coordinates(x, y);
-                }
-            }
-            return null;
-        }
-
         private void loadNextLevel()
         {
             byte[,] m = new byte[Grid.GRID_HEIGHT, Grid.GRID_WIDTH]
@@ -91,37 +85,65 @@ namespace Pacman
 
             engine = new Engine(grid);
 
-            Coordinates p = getPositionOnMap(map, Grid.PACMAN);
+            Coordinates p = grid.getPositionOnMap(Grid.PACMAN);
             pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
-            p = getPositionOnMap(map, Grid.GHOST_RED);
+            p = grid.getPositionOnMap(Grid.GHOST_RED);
             ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
             startNewLevel = true;
-            isDying = false;
+        }
+
+        public bool isFinished()
+        {
+            return finished;
         }
 
         //UPDATE & DRAW
         public void Update(MouseState mouse, KeyboardState keyboard)
         {
+            if (gameOver != null)
+            {
+                gameOver.Update(mouse, keyboard);
+                if (gameOver.isFinished())
+                {
+                    finished = true;
+                }
+            }
             if (Resources.beginningSound.State == SoundState.Stopped)
             {
                 if (grid.isFinished())
                 {
+                    //niveau terminé
                     loadNextLevel();
                 }
                 else if (engine.isCollision(pacman.getHitbox(), ghostRed.getHitbox()))
                 {
                     if (pacman.isVulnerable())
                     {
-                        if (isDying)
+                        if (pacman.isDead())
                         {
-                            if (Resources.pacmanDeathSound.State == SoundState.Stopped)
-                                loadNextLevel();
+                            if (!pacman.isDying())
+                            {
+                                lives.lose();
+                                if (lives.remainingLives() == 0)
+                                {
+                                    if (gameOver == null)
+                                        gameOver = new GameOver(score);
+                                }
+                                else
+                                {
+                                    Coordinates p;
+
+                                    p = grid.getPositionOnMap(Grid.PACMAN);
+                                    pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
+                                    p = grid.getPositionOnMap(Grid.GHOST_RED);
+                                    ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
+                                }
+                            }
                         }
                         else
                         {
-                            isDying = true;
                             pacman.die();
                         }
                     }
@@ -130,18 +152,29 @@ namespace Pacman
                 {
                     pacman.Update(mouse, keyboard);
                     ghostRed.Update(pacman.getGridPosition());
+                    if (engine.isCollisionBean(pacman.getHitbox()))
+                    {
+                        pacman.eat();
+                        score.eatBean();
+                    }
                 }
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (startNewLevel)
+            if (gameOver != null)
+            {
+                gameOver.Draw(spriteBatch);
+            }
+            else if (startNewLevel)
             {
                 startNewLevel = false;
                 grid.Draw(spriteBatch);
                 pacman.Draw(spriteBatch);
                 ghostRed.Draw(spriteBatch);
+                lives.Draw(spriteBatch);
+                score.Draw(spriteBatch);
                 Resources.beginningSound.Play();
             }
             else
@@ -149,6 +182,8 @@ namespace Pacman
                 grid.Draw(spriteBatch);
                 pacman.Draw(spriteBatch);
                 ghostRed.Draw(spriteBatch);
+                lives.Draw(spriteBatch);
+                score.Draw(spriteBatch);
             }
         }
     }

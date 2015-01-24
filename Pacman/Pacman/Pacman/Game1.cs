@@ -16,6 +16,7 @@ namespace Pacman
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         GameMain main;
+        MenuStart menu;
 
         public Game1()
         {
@@ -34,10 +35,11 @@ namespace Pacman
 
             Resources.LoadContent(Content);
 
+            menu = new MenuStart();
             main = new GameMain();
 
             graphics.PreferredBackBufferWidth = Grid.GRID_WIDTH * Tile.TILE_WITDH;
-            graphics.PreferredBackBufferHeight = Grid.GRID_HEIGHT * Tile.TILE_HEIGHT;
+            graphics.PreferredBackBufferHeight = (Grid.GRID_HEIGHT + 1) * Tile.TILE_HEIGHT;
             graphics.ApplyChanges();
         }
 
@@ -48,7 +50,22 @@ namespace Pacman
 
         protected override void Update(GameTime gameTime)
         {
-            main.Update(Mouse.GetState(), Keyboard.GetState());
+            if (menu.isFinished())
+            {
+                if (main.isFinished())
+                {
+                    menu = new MenuStart();
+                    main = new GameMain();
+                }
+                else
+                {
+                    main.Update(Mouse.GetState(), Keyboard.GetState());
+                }
+            }
+            else
+            {
+                menu.Update(Mouse.GetState(), Keyboard.GetState());
+            }
             base.Update(gameTime);
         }
 
@@ -56,7 +73,14 @@ namespace Pacman
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            main.Draw(spriteBatch);
+            if (menu.isFinished())
+            {
+                main.Draw(spriteBatch);
+            }
+            else
+            {
+                menu.Draw(spriteBatch);
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }

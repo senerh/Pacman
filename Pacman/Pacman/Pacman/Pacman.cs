@@ -31,7 +31,8 @@ namespace Pacman
 
         const int SPEED = 2;
         const int ANIMATION_SPEED = 3;
-        const int T_INVULNERABLE = 10 * 60;
+        const int T_INVULNERABLE = 5 * 60;
+        const int NB_FRAMES_DEATH = 12;
         //CONSTRUCTOR
         public Pacman(int x, int y, Engine engine)
         {
@@ -64,7 +65,7 @@ namespace Pacman
             if (timer >= ANIMATION_SPEED)
             {
                 timer = 0;
-                if (frameColumn < 12)
+                if (frameColumn < NB_FRAMES_DEATH)
                     frameColumn++;
             }
             else
@@ -89,55 +90,69 @@ namespace Pacman
             t_invulnerable = T_INVULNERABLE;
             vulnerable = false;
         }
+        public bool isDying()
+        {
+            if (dead)
+            {
+                if (frameColumn == NB_FRAMES_DEATH)
+                {
+                    if (Resources.pacmanDeathSound.State == SoundState.Stopped)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool isDead()
+        {
+            return dead;
+        }
         public void die()
         {
             dead = true;
             frameColumn = 1;
             Resources.pacmanDeathSound.Play();
         }
+        public void eat()
+        {
+            if (Resources.eatBean.State == SoundState.Stopped)
+                Resources.eatBean.Play();
+        }
         private void moveOnUp()
         {
             hitbox = engine.translateY(hitbox, -SPEED);
             direction = Direction.Up;
             Animate();
-            if (engine.isCollisionBean(hitbox))
-            {
-                if (Resources.eatBean.State == SoundState.Stopped)
-                    Resources.eatBean.Play();
-            }
         }
         private void moveOnDown()
         {
             hitbox = engine.translateY(hitbox, SPEED);
             direction = Direction.Down;
             Animate();
-            if (engine.isCollisionBean(hitbox))
-            {
-                if (Resources.eatBean.State == SoundState.Stopped)
-                    Resources.eatBean.Play();
-            }
         }
         private void moveOnRight()
         {
             hitbox = engine.translateX(hitbox, SPEED);
             direction = Direction.Right;
             Animate();
-            if (engine.isCollisionBean(hitbox))
-            {
-                if (Resources.eatBean.State == SoundState.Stopped)
-                    Resources.eatBean.Play();
-            }
         }
         private void moveOnLeft()
         {
             hitbox = engine.translateX(hitbox, -SPEED);
             direction = Direction.Left;
             Animate();
-            if (engine.isCollisionBean(hitbox))
-            {
-                if (Resources.eatBean.State == SoundState.Stopped)
-                    Resources.eatBean.Play();
-            }
         }
 
         //UPDATE & DRAW
