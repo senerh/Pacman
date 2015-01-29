@@ -15,7 +15,11 @@ namespace Pacman
         public const byte BEAN = 1;
         public const byte EMPTY = 2;
         public const byte PACMAN = 3;
-        public const byte GHOST_RED = 4;
+        public const byte GHOST_BLUE = 4;
+        public const byte GHOST_ORANGE = 5;
+        public const byte GHOST_PINK = 6;
+        public const byte GHOST_RED = 7;
+        public const byte HOUSE = 8;
 
 
         public const int GRID_WIDTH = 28;
@@ -24,6 +28,7 @@ namespace Pacman
         //FIELDS
         List<Bean> listBean;
         List<Wall> listWall;
+        List<House> listHouse;
         byte[,] map;
 
         //CONSTRUCTOR
@@ -32,6 +37,7 @@ namespace Pacman
             this.map = map;
             listBean = new List<Bean>();
             listWall = new List<Wall>();
+            listHouse = new List<House>();
 
             for (int x = 0; x < GRID_WIDTH; x++)
             {
@@ -150,6 +156,9 @@ namespace Pacman
                         case BEAN:
                             listBean.Add(new Bean(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT));
                             break;
+                        case HOUSE:
+                            listHouse.Add(new House(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT));
+                            break;
                         default:
                             break;
                     }
@@ -170,6 +179,11 @@ namespace Pacman
         public List<Bean> getListBean()
         {
             return listBean;
+        }
+
+        public List<House> getListHouse()
+        {
+            return listHouse;
         }
 
         public byte[,] getMap()
@@ -209,6 +223,10 @@ namespace Pacman
             foreach(Bean b in listBean)
             {
                 b.Draw(spriteBatch);
+            }
+            foreach(House h in listHouse)
+            {
+                h.Draw(spriteBatch);
             }
         }
     }

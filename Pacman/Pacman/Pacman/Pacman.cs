@@ -132,25 +132,25 @@ namespace Pacman
         }
         private void moveOnUp()
         {
-            hitbox = engine.translateY(hitbox, -SPEED);
+            hitbox = engine.translateY(hitbox, -SPEED, true, true);
             direction = Direction.Up;
             Animate();
         }
         private void moveOnDown()
         {
-            hitbox = engine.translateY(hitbox, SPEED);
+            hitbox = engine.translateY(hitbox, SPEED, true, true);
             direction = Direction.Down;
             Animate();
         }
         private void moveOnRight()
         {
-            hitbox = engine.translateX(hitbox, SPEED);
+            hitbox = engine.translateX(hitbox, SPEED, true, true);
             direction = Direction.Right;
             Animate();
         }
         private void moveOnLeft()
         {
-            hitbox = engine.translateX(hitbox, -SPEED);
+            hitbox = engine.translateX(hitbox, -SPEED, true, true);
             direction = Direction.Left;
             Animate();
         }

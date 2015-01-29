@@ -82,6 +82,7 @@
     <Compile Include="GameOver.cs" />
     <Compile Include="GhostRed.cs" />
     <Compile Include="Grid.cs" />
+    <Compile Include="House.cs" />
     <Compile Include="Life.cs" />
     <Compile Include="MenuStart.cs" />
     <Compile Include="Pacman.cs" />
