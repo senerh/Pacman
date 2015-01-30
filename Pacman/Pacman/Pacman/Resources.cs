@@ -17,6 +17,8 @@ namespace Pacman
         public static Texture2D ghostOrange;
         public static Texture2D ghostPink;
         public static Texture2D ghostRed;
+        public static Texture2D ghostVulnerable;
+        public static Texture2D ghostDead;
         public static Texture2D wallBot, wallBotLeft, wallBotRight, wallBotX;
         public static Texture2D wallLeft, wallLeftX;
         public static Texture2D wallMid, wallMidX, wallMidXH, wallMidXV;
@@ -24,6 +26,7 @@ namespace Pacman
         public static Texture2D wallTop, wallTopLeft, wallTopRight, wallTopX;
         public static Texture2D house;
         public static Texture2D bean;
+        public static Texture2D superBean;
         public static Texture2D life;
         public static Texture2D start;
         public static Texture2D gameOver;
@@ -41,6 +44,8 @@ namespace Pacman
             ghostOrange = content.Load<Texture2D>("images/ghostOrange");
             ghostPink = content.Load<Texture2D>("images/ghostPink");
             ghostRed = content.Load<Texture2D>("images/ghostRed");
+            ghostVulnerable = content.Load<Texture2D>("images/ghostVulnerable");
+            ghostDead = content.Load<Texture2D>("images/ghostDead");
             wallBot = content.Load<Texture2D>("images/wallBot");
             wallBotLeft = content.Load<Texture2D>("images/wallBotLeft");
             wallBotRight = content.Load<Texture2D>("images/wallBotRight");
@@ -59,6 +64,7 @@ namespace Pacman
             wallTopX = content.Load<Texture2D>("images/wallTopX");
             house = content.Load<Texture2D>("images/house");
             bean = content.Load<Texture2D>("images/bean");
+            superBean = content.Load<Texture2D>("images/superBean");
             life = content.Load<Texture2D>("images/life");
             start = content.Load<Texture2D>("images/start");
             gameOver = content.Load<Texture2D>("images/gameOver");

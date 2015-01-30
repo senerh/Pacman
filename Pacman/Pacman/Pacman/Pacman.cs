@@ -16,7 +16,6 @@ namespace Pacman
     class Pacman
     {
         //FIELDS
-        bool vulnerable;
         bool dead;
 
         Rectangle hitbox;
@@ -27,7 +26,6 @@ namespace Pacman
         int frameLine;
         int frameColumn;
         int timer;
-        int t_invulnerable;
 
         const int SPEED = 2;
         const int ANIMATION_SPEED = 3;
@@ -40,7 +38,6 @@ namespace Pacman
             hitbox = new Rectangle(x, y, Tile.TILE_WITDH, Tile.TILE_HEIGHT);
             direction = Direction.Right;
             timer = 0;
-            vulnerable = true;
             dead = false;
         }
 
@@ -81,15 +78,7 @@ namespace Pacman
         {
             return hitbox;
         }
-        public bool isVulnerable()
-        {
-            return vulnerable;
-        }
-        public void setInvulnerable()
-        {
-            t_invulnerable = T_INVULNERABLE;
-            vulnerable = false;
-        }
+
         public bool isDying()
         {
             if (dead)
@@ -209,13 +198,6 @@ namespace Pacman
                     break;
                 case Direction.None:
                     break;
-            }
-
-            if (!vulnerable)
-            {
-                t_invulnerable--;
-                if (t_invulnerable == 0)
-                    vulnerable = true;
             }
         }
 

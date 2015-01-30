@@ -39,7 +39,7 @@ namespace Pacman
             byte[,] m = new byte[Grid.GRID_HEIGHT, Grid.GRID_WIDTH]
             {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 0},
             {0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
             {0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
             {0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0},
@@ -67,7 +67,7 @@ namespace Pacman
             {0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0},
             {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
             {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             };
 
@@ -110,7 +110,7 @@ namespace Pacman
                     finished = true;
                 }
             }
-            if (Resources.beginningSound.State == SoundState.Stopped)
+            else if (Resources.beginningSound.State == SoundState.Stopped)
             {
                 if (grid.isFinished())
                 {
@@ -119,7 +119,11 @@ namespace Pacman
                 }
                 else if (engine.isCollision(pacman.getHitbox(), ghostRed.getHitbox()))
                 {
-                    if (pacman.isVulnerable())
+                    if (ghostRed.isVulnerable() && !ghostRed.isDead())
+                    {
+                        ghostRed.die();
+                    }
+                    else if (!ghostRed.isVulnerable() && !ghostRed.isDead())
                     {
                         if (pacman.isDead())
                         {
@@ -148,7 +152,7 @@ namespace Pacman
                         }
                     }
                 }
-                else
+                if (!pacman.isDead())
                 {
                     pacman.Update(mouse, keyboard);
                     ghostRed.Update(pacman.getGridPosition());
@@ -157,7 +161,17 @@ namespace Pacman
                         pacman.eat();
                         score.eatBean();
                     }
+                    else if (engine.isCollisionSuperBean(pacman.getHitbox()))
+                    {
+                        pacman.eat();
+                        score.eatSuperBean();
+                        ghostRed.setVulnerable();
+                    }
                 }
+            }
+            else
+            {
+                ghostRed.Update(pacman.getGridPosition());
             }
         }
 

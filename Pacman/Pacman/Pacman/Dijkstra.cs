@@ -10,6 +10,7 @@ namespace Pacman
     {
         private Summit[,] summits;
         private Engine engine;
+        private Coordinates topLeft, topRight, botLeft, botRight;
         public Dijkstra(Engine engine)
         {
             this.engine = engine;
@@ -22,6 +23,56 @@ namespace Pacman
                         summits[x, y] = new Summit(new Coordinates(x, y));
                 }
             }
+
+            int i, j;
+
+            i = 0; j = 0;
+            while (summits[i, j] == null)
+            {
+                i++;
+                if (i > Grid.GRID_WIDTH / 2)
+                {
+                    i = 0;
+                    j++;
+                }
+            }
+            topLeft = new Coordinates(i, j);
+
+            i = Grid.GRID_WIDTH - 1; j = 0;
+            while (summits[i, j] == null)
+            {
+                i--;
+                if (i < Grid.GRID_WIDTH / 2)
+                {
+                    i = Grid.GRID_WIDTH - 1;
+                    j++;
+                }
+            }
+            topRight = new Coordinates(i, j);
+
+            i = 0; j = Grid.GRID_HEIGHT - 1;
+            while (summits[i, j] == null)
+            {
+                i++;
+                if (i > Grid.GRID_WIDTH / 2)
+                {
+                    i = 0;
+                    j--;
+                }
+            }
+            botLeft = new Coordinates(i, j);
+
+            i = Grid.GRID_WIDTH - 1; j = Grid.GRID_HEIGHT - 1;
+            while (summits[i, j] == null)
+            {
+                i--;
+                if (i < Grid.GRID_WIDTH / 2)
+                {
+                    i = Grid.GRID_WIDTH - 1;
+                    j--;
+                }
+            }
+            botRight = new Coordinates(i, j);
         }
         public Direction getDirection(Coordinates currentCoordinates, Coordinates targetedCoordinates)
         {
@@ -126,6 +177,26 @@ namespace Pacman
                 return Direction.Right;
             else
                 return Direction.None;
+        }
+
+        public Direction getDirectionTopLeft(Coordinates currentCoordinates)
+        {
+            return getDirection(currentCoordinates, topLeft);
+        }
+
+        public Direction getDirectionTopRight(Coordinates currentCoordinates)
+        {
+            return getDirection(currentCoordinates, topRight);
+        }
+
+        public Direction getDirectionBotLeft(Coordinates currentCoordinates)
+        {
+            return getDirection(currentCoordinates, botLeft);
+        }
+
+        public Direction getDirectionBotRight(Coordinates currentCoordinates)
+        {
+            return getDirection(currentCoordinates, botRight);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Pacman
         public const byte GHOST_PINK = 6;
         public const byte GHOST_RED = 7;
         public const byte HOUSE = 8;
-
+        public const byte SUPER_BEAN = 9;
 
         public const int GRID_WIDTH = 28;
         public const int GRID_HEIGHT = 31;
@@ -29,6 +29,7 @@ namespace Pacman
         List<Bean> listBean;
         List<Wall> listWall;
         List<House> listHouse;
+        List<SuperBean> listSuperBean;
         byte[,] map;
 
         //CONSTRUCTOR
@@ -38,6 +39,7 @@ namespace Pacman
             listBean = new List<Bean>();
             listWall = new List<Wall>();
             listHouse = new List<House>();
+            listSuperBean = new List<SuperBean>();
 
             for (int x = 0; x < GRID_WIDTH; x++)
             {
@@ -156,6 +158,9 @@ namespace Pacman
                         case BEAN:
                             listBean.Add(new Bean(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT));
                             break;
+                        case SUPER_BEAN:
+                            listSuperBean.Add(new SuperBean(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT));
+                            break;
                         case HOUSE:
                             listHouse.Add(new House(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT));
                             break;
@@ -172,6 +177,11 @@ namespace Pacman
             listBean.Remove(b);
         }
 
+        public void removeSuperBean(SuperBean b)
+        {
+            listSuperBean.Remove(b);
+        }
+
         public List<Wall> getListWall()
         {
             return listWall;
@@ -184,6 +194,11 @@ namespace Pacman
         public List<House> getListHouse()
         {
             return listHouse;
+        }
+
+        public List<SuperBean> getListSuperBean()
+        {
+            return listSuperBean;
         }
 
         public byte[,] getMap()
@@ -227,6 +242,10 @@ namespace Pacman
             foreach(House h in listHouse)
             {
                 h.Draw(spriteBatch);
+            }
+            foreach(SuperBean b in listSuperBean)
+            {
+                b.Draw(spriteBatch);
             }
         }
     }

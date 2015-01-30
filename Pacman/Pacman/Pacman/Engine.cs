@@ -9,15 +9,10 @@ namespace Pacman
     class Engine
     {
         Grid grid;
-        List<Wall> listWall;
-        List<Bean> listBean;
-        List<House> listHouse;
+
         public Engine(Grid grid)
         {
             this.grid = grid;
-            this.listWall = grid.getListWall();
-            this.listBean = grid.getListBean();
-            this.listHouse = grid.getListHouse();
         }
 
         public bool isCollision(Rectangle hitbox1, Rectangle hitbox2)
@@ -102,7 +97,7 @@ namespace Pacman
 
         public bool isCollisionWall(Rectangle hitbox)
         {
-            foreach(Wall w in listWall)
+            foreach(Wall w in grid.getListWall())
             {
                 if (isCollision(w.getHitbox(), hitbox))
                 {
@@ -114,7 +109,7 @@ namespace Pacman
 
         public bool isCollisionHouse(Rectangle hitbox)
         {
-            foreach (House h in listHouse)
+            foreach (House h in grid.getListHouse())
             {
                 if (isCollision(h.getHitbox(), hitbox))
                 {
@@ -132,7 +127,7 @@ namespace Pacman
 
         public bool isCollisionBean(Rectangle hitbox)
         {
-            foreach(Bean b in listBean)
+            foreach(Bean b in grid.getListBean())
             {
                 if (isCollision(b.getHitbox(), hitbox))
                 {
@@ -141,6 +136,25 @@ namespace Pacman
                 }
             }
             return false;
+        }
+
+        public bool isCollisionSuperBean(Rectangle hitbox)
+        {
+            foreach (SuperBean b in grid.getListSuperBean())
+            {
+                if (isCollision(b.getHitbox(), hitbox))
+                {
+                    grid.removeSuperBean(b);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Coordinates getRandomBeanCoordinates()
+        {
+            int i = new Random().Next(grid.getListBean().Count());
+            return grid.getListBean()[i].getCoordinatesOnMap();
         }
     }
 }

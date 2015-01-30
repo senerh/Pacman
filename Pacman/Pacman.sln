@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pacman", "Pacman\Pacman\Pacman.csproj", "{493BB5FA-BF1C-4B96-936F-AC5488BDE9AC}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "PacmanContent", "Pacman\PacmanContent\PacmanContent.contentproj", "{30802964-2C22-4C12-94F8-744B428D8E4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacmanContent", "Pacman\PacmanContent\PacmanContent.contentproj", "{30802964-2C22-4C12-94F8-744B428D8E4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +15,11 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{493BB5FA-BF1C-4B96-936F-AC5488BDE9AC}.Debug|x86.ActiveCfg = Debug|x86
 		{493BB5FA-BF1C-4B96-936F-AC5488BDE9AC}.Debug|x86.Build.0 = Debug|x86
+		{493BB5FA-BF1C-4B96-936F-AC5488BDE9AC}.Debug|x86.Deploy.0 = Debug|x86
 		{493BB5FA-BF1C-4B96-936F-AC5488BDE9AC}.Release|x86.ActiveCfg = Release|x86
 		{493BB5FA-BF1C-4B96-936F-AC5488BDE9AC}.Release|x86.Build.0 = Release|x86
 		{30802964-2C22-4C12-94F8-744B428D8E4B}.Debug|x86.ActiveCfg = Debug|x86
+		{30802964-2C22-4C12-94F8-744B428D8E4B}.Debug|x86.Build.0 = Debug|x86
 		{30802964-2C22-4C12-94F8-744B428D8E4B}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution

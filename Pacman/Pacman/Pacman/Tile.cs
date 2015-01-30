@@ -30,6 +30,10 @@ namespace Pacman
         {
             return hitbox;
         }
+        public Coordinates getCoordinatesOnMap()
+        {
+            return new Coordinates(hitbox.X / Tile.TILE_WITDH, hitbox.Y / Tile.TILE_HEIGHT);
+        }
 
         //UPDATE & DRAW
         public void Update(MouseState mouse, KeyboardState keyboard)
