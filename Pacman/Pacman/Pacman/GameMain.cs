@@ -14,12 +14,13 @@ namespace Pacman
     {
         //FIELDS
         Pacman pacman;
-        GhostRed ghostRed;
         Grid grid;
         Engine engine;
         Life lives;
         Score score;
         GameOver gameOver;
+        List<Ghost> listGhost;
+        Ghost ghost;
         bool startNewLevel;
         bool finished;
 
@@ -88,8 +89,16 @@ namespace Pacman
             Coordinates p = grid.getPositionOnMap(Grid.PACMAN);
             pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
+            listGhost = new List<Ghost>();
+
             p = grid.getPositionOnMap(Grid.GHOST_RED);
-            ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
+            listGhost.Add(new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
+            p = grid.getPositionOnMap(Grid.GHOST_ORANGE);
+            listGhost.Add(new GhostOrange(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
+            p = grid.getPositionOnMap(Grid.GHOST_PINK);
+            listGhost.Add(new GhostPink(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
+            p = grid.getPositionOnMap(Grid.GHOST_BLUE);
+            listGhost.Add(new GhostBlue(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
 
             startNewLevel = true;
         }
@@ -97,6 +106,18 @@ namespace Pacman
         public bool isFinished()
         {
             return finished;
+        }
+
+        private Ghost collidedGhost()
+        {
+            foreach(Ghost g in listGhost)
+            {
+                if (engine.isCollision(g.getHitbox(), pacman.getHitbox()))
+                {
+                    return g;
+                }
+            }
+            return null;
         }
 
         //UPDATE & DRAW
@@ -117,32 +138,36 @@ namespace Pacman
                     //niveau terminé
                     loadNextLevel();
                 }
-                else if (engine.isCollision(pacman.getHitbox(), ghostRed.getHitbox()))
+                else if ((ghost = collidedGhost()) != null)//s'il y a une collision entre fantome et pacman
                 {
-                    if (ghostRed.isVulnerable() && !ghostRed.isDead())
+                    if (ghost.isVulnerable() && !ghost.isDead())//si le fantôme est vulnérable
                     {
-                        ghostRed.die();
+                        ghost.die();
                     }
-                    else if (!ghostRed.isVulnerable() && !ghostRed.isDead())
+                    else if (!ghost.isVulnerable() && !ghost.isDead())//si le fantôme n'est pas vulnérable
                     {
                         if (pacman.isDead())
                         {
-                            if (!pacman.isDying())
+                            if (!pacman.isDying())//si le pacman a fini de mourrir
                             {
                                 lives.lose();
-                                if (lives.remainingLives() == 0)
+                                if (lives.remainingLives() == 0)//si le pacman n'a plus de vies
                                 {
                                     if (gameOver == null)
                                         gameOver = new GameOver(score);
                                 }
-                                else
+                                else//s'il reste des vies au pacman
                                 {
                                     Coordinates p;
 
                                     p = grid.getPositionOnMap(Grid.PACMAN);
                                     pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
                                     p = grid.getPositionOnMap(Grid.GHOST_RED);
-                                    ghostRed = new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
+                                    //TODO : MODIFIER
+                                    foreach(Ghost g in listGhost)
+                                    {
+                                        g.init();
+                                    }
                                 }
                             }
                         }
@@ -155,7 +180,10 @@ namespace Pacman
                 if (!pacman.isDead())
                 {
                     pacman.Update(mouse, keyboard);
-                    ghostRed.Update(pacman.getGridPosition());
+                    foreach(Ghost g in listGhost)
+                    {
+                        g.Update(pacman.getGridPosition());
+                    }
                     if (engine.isCollisionBean(pacman.getHitbox()))
                     {
                         pacman.eat();
@@ -165,13 +193,19 @@ namespace Pacman
                     {
                         pacman.eat();
                         score.eatSuperBean();
-                        ghostRed.setVulnerable();
+                        foreach (Ghost g in listGhost)
+                        {
+                            g.setVulnerable();
+                        }
                     }
                 }
             }
             else
             {
-                ghostRed.Update(pacman.getGridPosition());
+                foreach (Ghost g in listGhost)
+                {
+                    g.Update(pacman.getGridPosition());
+                }
             }
         }
 
@@ -186,7 +220,10 @@ namespace Pacman
                 startNewLevel = false;
                 grid.Draw(spriteBatch);
                 pacman.Draw(spriteBatch);
-                ghostRed.Draw(spriteBatch);
+                foreach (Ghost g in listGhost)
+                {
+                    g.Draw(spriteBatch);
+                }
                 lives.Draw(spriteBatch);
                 score.Draw(spriteBatch);
                 Resources.beginningSound.Play();
@@ -195,7 +232,10 @@ namespace Pacman
             {
                 grid.Draw(spriteBatch);
                 pacman.Draw(spriteBatch);
-                ghostRed.Draw(spriteBatch);
+                foreach (Ghost g in listGhost)
+                {
+                    g.Draw(spriteBatch);
+                }
                 lives.Draw(spriteBatch);
                 score.Draw(spriteBatch);
             }

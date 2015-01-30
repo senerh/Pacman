@@ -93,6 +93,10 @@
     <Compile Include="Engine.cs" />
     <Compile Include="GameMain.cs" />
     <Compile Include="GameOver.cs" />
+    <Compile Include="Ghost.cs" />
+    <Compile Include="GhostBlue.cs" />
+    <Compile Include="GhostOrange.cs" />
+    <Compile Include="GhostPink.cs" />
     <Compile Include="GhostRed.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="House.cs" />
