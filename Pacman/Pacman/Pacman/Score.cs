@@ -13,6 +13,7 @@ namespace Pacman
         //CONSTANTS
         const int SCORE_BEAN = 10;
         const int SCORE_SUPER_BEAN = 50;
+        const int SCORE_GHOST = 100;
 
         //FIELDS
         Vector2 position;
@@ -34,9 +35,14 @@ namespace Pacman
         {
             score = score + SCORE_BEAN;
         }
-        internal void eatSuperBean()
+        public void eatSuperBean()
         {
             score = score + SCORE_SUPER_BEAN;
+        }
+
+        public void eatGhost()
+        {
+            score = score + SCORE_GHOST;
         }
 
         //UPDATE & DRAW

@@ -208,7 +208,7 @@ namespace Pacman
 
         public bool isFinished()
         {
-            return (listBean.Count == 0);
+            return (listBean.Count == 0 && listSuperBean.Count == 0);
         }
 
         public Coordinates getPositionOnMap(byte element)
