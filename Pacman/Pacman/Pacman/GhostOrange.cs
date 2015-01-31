@@ -38,7 +38,7 @@ namespace Pacman
                 else
                 {
                     i = 0;
-                    targetedCoordinates = engine.getRandomBeanCoordinates();
+                    targetedCoordinates = engine.getRandomEmptyCoordinates();
                 }
                 return dijkstra.getDirection(getGridPosition(), targetedCoordinates);
             }

@@ -59,7 +59,7 @@ namespace Pacman
                 }
                 else
                 {
-                    main.Update(Mouse.GetState(), Keyboard.GetState());
+                    main.Update(Keyboard.GetState());
                 }
             }
             else

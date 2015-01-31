@@ -145,7 +145,7 @@ namespace Pacman
         }
 
         //UPDATE & DRAW
-        public void Update(MouseState mouse, KeyboardState keyboard)
+        public void Update(KeyboardState keyboard)
         {
             if (hitbox.X % Tile.TILE_WITDH != 0)
             {

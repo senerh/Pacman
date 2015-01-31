@@ -21,16 +21,22 @@ namespace Pacman
         public const byte GHOST_RED = 7;
         public const byte HOUSE = 8;
         public const byte SUPER_BEAN = 9;
+        public const byte BONUS = 10;
 
         public const int GRID_WIDTH = 28;
         public const int GRID_HEIGHT = 31;
+
+        public const int TIME_BONUS_SPAWN = 15 * 60;
 
         //FIELDS
         List<Bean> listBean;
         List<Wall> listWall;
         List<House> listHouse;
         List<SuperBean> listSuperBean;
+        Bonus bonus;
         byte[,] map;
+
+        int timeBonusSpawn;
 
         //CONSTRUCTOR
         public Grid(byte[,] map)
@@ -40,6 +46,7 @@ namespace Pacman
             listWall = new List<Wall>();
             listHouse = new List<House>();
             listSuperBean = new List<SuperBean>();
+            timeBonusSpawn = TIME_BONUS_SPAWN;
 
             for (int x = 0; x < GRID_WIDTH; x++)
             {
@@ -164,6 +171,9 @@ namespace Pacman
                         case HOUSE:
                             listHouse.Add(new House(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT));
                             break;
+                        case BONUS:
+                            bonus = new Bonus(x * Tile.TILE_WITDH, y * Tile.TILE_HEIGHT);
+                            break;
                         default:
                             break;
                     }
@@ -206,12 +216,17 @@ namespace Pacman
             return map;
         }
 
+        public Bonus getBonus()
+        {
+            return bonus;
+        }
+
         public bool isFinished()
         {
             return (listBean.Count == 0 && listSuperBean.Count == 0);
         }
 
-        public Coordinates getPositionOnMap(byte element)
+        public Coordinates getCoordinatesOnMap(byte element)
         {
             for (int x = 0; x < Grid.GRID_WIDTH; x++)
             {
@@ -223,30 +238,38 @@ namespace Pacman
             }
             return null;
         }
+
         //UPDATE & DRAW
-        public void Update(MouseState mouse, KeyboardState keyboard)
+
+        public void Update()
         {
-
+            timeBonusSpawn--;
+            if (timeBonusSpawn < 0)
+            {
+                timeBonusSpawn = TIME_BONUS_SPAWN;
+                bonus.addBonus();
+            }
+            bonus.Update();
         }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach(Wall w in listWall)
             {
                 w.Draw(spriteBatch);
             }
+            foreach (House h in listHouse)
+            {
+                h.Draw(spriteBatch);
+            }
             foreach(Bean b in listBean)
             {
                 b.Draw(spriteBatch);
-            }
-            foreach(House h in listHouse)
-            {
-                h.Draw(spriteBatch);
             }
             foreach(SuperBean b in listSuperBean)
             {
                 b.Draw(spriteBatch);
             }
+            bonus.Draw(spriteBatch);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace Pacman
         public static Texture2D bean;
         public static Texture2D superBean;
         public static Texture2D life;
+        public static Texture2D bonus;
         public static Texture2D start;
         public static Texture2D gameOver;
         public static SoundEffectInstance beginningSound;
@@ -66,6 +67,7 @@ namespace Pacman
             bean = content.Load<Texture2D>("images/bean");
             superBean = content.Load<Texture2D>("images/superBean");
             life = content.Load<Texture2D>("images/life");
+            bonus = content.Load<Texture2D>("images/bonus");
             start = content.Load<Texture2D>("images/start");
             gameOver = content.Load<Texture2D>("images/gameOver");
             beginningSound = content.Load<SoundEffect>("sons/pacman_beginning").CreateInstance();

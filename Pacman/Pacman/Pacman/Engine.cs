@@ -9,10 +9,12 @@ namespace Pacman
     class Engine
     {
         Grid grid;
+        List<Coordinates> listEmptyCoordinates;
 
         public Engine(Grid grid)
         {
             this.grid = grid;
+            listEmptyCoordinates = new List<Coordinates>();
         }
 
         public bool isCollision(Rectangle hitbox1, Rectangle hitbox2)
@@ -119,6 +121,16 @@ namespace Pacman
             return false;
         }
 
+        public bool isCollisionBonus(Rectangle hitbox)
+        {
+            if (grid.getBonus().isBonus() && isCollision(hitbox, grid.getBonus().getHitbox()))
+            {
+                grid.getBonus().removeBonus();
+                return true;
+            }
+            return false;
+        }
+
         public bool isWallOnMap(int x, int y)
         {
             byte[,] map = grid.getMap();
@@ -131,6 +143,7 @@ namespace Pacman
             {
                 if (isCollision(b.getHitbox(), hitbox))
                 {
+                    listEmptyCoordinates.Add(b.getCoordinatesOnMap());
                     grid.removeBean(b);
                     return true;
                 }
@@ -155,6 +168,19 @@ namespace Pacman
         {
             int i = new Random().Next(grid.getListBean().Count());
             return grid.getListBean()[i].getCoordinatesOnMap();
+        }
+
+        public Coordinates getRandomEmptyCoordinates()
+        {
+            if (listEmptyCoordinates.Count() == 0)
+            {
+                return getRandomBeanCoordinates();
+            }
+            else
+            {
+                int i = new Random().Next(listEmptyCoordinates.Count());
+                return listEmptyCoordinates[i];
+            }
         }
     }
 }

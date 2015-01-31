@@ -250,6 +250,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="images\bonus.png">
+      <Name>bonus</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Content Include="level.txt">
       <Name>level</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

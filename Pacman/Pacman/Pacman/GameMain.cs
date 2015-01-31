@@ -45,18 +45,18 @@ namespace Pacman
 
             engine = new Engine(grid);
 
-            Coordinates p = grid.getPositionOnMap(Grid.PACMAN);
+            Coordinates p = grid.getCoordinatesOnMap(Grid.PACMAN);
             pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
 
             listGhost = new List<Ghost>();
 
-            p = grid.getPositionOnMap(Grid.GHOST_RED);
+            p = grid.getCoordinatesOnMap(Grid.GHOST_RED);
             listGhost.Add(new GhostRed(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
-            p = grid.getPositionOnMap(Grid.GHOST_ORANGE);
+            p = grid.getCoordinatesOnMap(Grid.GHOST_ORANGE);
             listGhost.Add(new GhostOrange(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
-            p = grid.getPositionOnMap(Grid.GHOST_PINK);
+            p = grid.getCoordinatesOnMap(Grid.GHOST_PINK);
             listGhost.Add(new GhostPink(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
-            p = grid.getPositionOnMap(Grid.GHOST_BLUE);
+            p = grid.getCoordinatesOnMap(Grid.GHOST_BLUE);
             listGhost.Add(new GhostBlue(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine));
 
             startNewLevel = true;
@@ -80,21 +80,20 @@ namespace Pacman
         }
 
         //UPDATE & DRAW
-        public void Update(MouseState mouse, KeyboardState keyboard)
+        public void Update(KeyboardState keyboard)
         {
-            if (gameOver != null)
+            if (gameOver != null)//si le joueur a perdu
             {
-                gameOver.Update(mouse, keyboard);
+                gameOver.Update(keyboard);
                 if (gameOver.isFinished())
                 {
                     finished = true;
                 }
             }
-            else if (Resources.beginningSound.State == SoundState.Stopped)
+            else if (Resources.beginningSound.State == SoundState.Stopped)//si la partie a commencé
             {
-                if (grid.isFinished())
+                if (grid.isFinished())//si le joueur a gagné
                 {
-                    //niveau terminé
                     loadNextLevel();
                 }
                 else if ((ghost = collidedGhost()) != null)//s'il y a une collision entre fantome et pacman
@@ -120,10 +119,9 @@ namespace Pacman
                                 {
                                     Coordinates p;
 
-                                    p = grid.getPositionOnMap(Grid.PACMAN);
+                                    p = grid.getCoordinatesOnMap(Grid.PACMAN);
                                     pacman = new Pacman(p.X * Tile.TILE_WITDH, p.Y * Tile.TILE_HEIGHT, engine);
-                                    p = grid.getPositionOnMap(Grid.GHOST_RED);
-                                    //TODO : MODIFIER
+                                    p = grid.getCoordinatesOnMap(Grid.GHOST_RED);
                                     foreach(Ghost g in listGhost)
                                     {
                                         g.init();
@@ -137,13 +135,15 @@ namespace Pacman
                         }
                     }
                 }
-                if (!pacman.isDead())
+                if (!pacman.isDead())//si la partie est en cours de jeu
                 {
-                    pacman.Update(mouse, keyboard);
+                    pacman.Update(keyboard);
                     foreach(Ghost g in listGhost)
                     {
                         g.Update(pacman.getGridPosition());
                     }
+                    grid.Update();
+
                     if (engine.isCollisionBean(pacman.getHitbox()))
                     {
                         pacman.eat();
@@ -157,6 +157,11 @@ namespace Pacman
                         {
                             g.setVulnerable();
                         }
+                    }
+                    else if (engine.isCollisionBonus(pacman.getHitbox()))
+                    {
+                        pacman.eat();
+                        score.eatBonus();
                     }
                 }
             }
